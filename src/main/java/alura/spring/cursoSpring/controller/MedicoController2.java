@@ -52,7 +52,7 @@ public class MedicoController2 {
         //..da mesma forma que criamos um DTO para DadosCadastroMedico/Paciente, vamos criar um DTO para devolver dados da API, entao sera um <DadosListagemMEdico>
         /*return repository.findAll();*/
         //Apos criar o DTO, o repository.findall() dara erro, pois findAll retorna uma lista de medico, a antidade JPA, mas o nosso retorno e DadosListagemMedico, entao vou ter que converter. Converter de medico para DadosListagemMEdico*/
-        return repository.findAll(paginacao/*faco uma sobrecarga aqui no findall passando a paginacao*/).stream().map(DadosListagemMedico::new).toList();/* 1.b .map(DadosListagemMedico::new) dara erro, assim eu preciso chamar um construtor do record DadosListagemMEdico, mas aqui dentro do DTO n existe um construtor que recebe um objeto do tipo medico */
+        return repository.findAll(paginacao/*faco uma sobrecarga aqui no findall passando a paginacao*/).map(DadosListagemMedico::new)/*tiro o map, tolist e o strem, pois o map ja faz a conversao e ja retorna um page de dto automaticamente*/;/* 1.b .map(DadosListagemMedico::new) dara erro, assim eu preciso chamar um construtor do record DadosListagemMEdico, mas aqui dentro do DTO n existe um construtor que recebe um objeto do tipo medico */
         /*fazendo mapeamento para converter medicos para DadosListagemMEdicos*/
         /*com isso eu converto uma lista de medicos para uma lista de DadosListagemMEdico que e o nosso DTO*/
     }
@@ -64,3 +64,6 @@ public class MedicoController2 {
 //..devo criar uma pasta em resources da seguinte forma (criar diretorio: db/migration "a IDE vai entender como uma pasta DB e uma subpasta Migration e ficara escrito da seguinte forma -> db.migration"
 //..Apos isso crio um arquivo .SQL que recebera meu codigo SQL, e esse arquivo deve ter a seguinte estrutura de nome
 //..V1__algum-nome-descritivo-para-o-codigo-a-ser-executado.sql (v1 mostra a versao daquela migration e tem que ter dois underlines)
+
+/*lembrar de fazer o retorno do controller retornar um page e nao uma lista, pois assim devolveremos informacoes sobre a paginacao tambem. Que sera mt util para o front*/
+/*Para controlar o numero de registros que queremos devolver, devo passar na URL apos "?size=1" para retornar 1 registro e para paginar apos o size passo "&page=2" */
