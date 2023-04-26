@@ -88,3 +88,7 @@ public class MedicoController2 {
 /*PARA SABER COMO ELE TA FAZENDO A PAGINACAO E A ORDENACAO E EU QUERO VER ISSO NO CONSOLE, VER O LOG SQL QUE ELE ESTA USANDO PARA FAZER ESSA QUERY*/
 /*POSSO FAZER ESSA CONFIG NO application.properties (spring.jpa.show-sql=true)*/
 /*formatar o comando sql JPA que vai aparecer no console (spring.jpa.properties.hibernate.format_sql=true)*/
+
+
+//****resumo put****
+/*Nossa resuisicao de ATT, disparo uma requisicao do tipo PUT, passando o ID e os atributos que quero atualizar para identificar no BACKEND qual registro vai ser atualizado no banco de dados e no nosso controller/logica para att e bem simples. " carregamoso registro atual atraves do ID sobrescreve os atributos baseados nos novos campos que chegaram do DTO e pronto, nao preciso chamar nada do REPOSITORY o update vai ser feito atuomaticamente pela JPA"*/
