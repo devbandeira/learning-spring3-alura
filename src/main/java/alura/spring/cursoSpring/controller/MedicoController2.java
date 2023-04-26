@@ -66,6 +66,16 @@ public class MedicoController2 {
         /*Carreguei o MEdico pelo ID, chamei os metodos para atualizar baseados no DTO.*/
         /*Como falo para ele fazer um UPDATE no BD. Nao preciso fazer nada, pois o JPA se encarrega disso, pois nosso metodo esta anotado com uma @Transational dai nosso codigo vai ser, entao nosso trecho de codigo roda dentro de uma transacao, entao a JPA se vc carrega uma entidade do banco de dados e muda um atributo, quando a transacao for completa, a JPA detecta que teve uma mudanca e atualiza o atributo e faz update sozinho*/
     }
+
+    @DeleteMapping("/{id}")//O spring sabe que i {id} que vem da URL e dinamico pq esta entre chaves e ele e um complemento do endereco inicial
+    @Transactional//preciso usar pois vou fazer uma escrita (igual metodo de CADASTRAR E ATUALIZAR)
+    //Vai receber um parametro dinamico, na barra de enderecos URI {ID} (OBS: todos parametro que tem ?size...?talCoisa sao parametros de queryes, convencionalmente para GET HTTP
+    //
+    public void excluir(@PathVariable Long id){//Para capturar o ID que vai chegar da nossa URL, basta eu passar ele como parametro. Utilizando o @PathVariable, ou seja, uma variavel do PATH da URL (caminho da URL)
+        //Entao preciso acessar o banco de dados e chamo o repository
+        repository.deleteById(id);//Ate aqui eu to fazendo uma esclusao fisica e nao uma exclusao logica(somente deixar em status OFF) conforme pede o enunciado
+
+    }
 }
 
 //depois de ter feito tudo e estar tudo ok, teremos o erro onde nao e possivel criar o novo usuario
