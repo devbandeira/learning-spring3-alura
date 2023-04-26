@@ -47,7 +47,27 @@ public class Medico {
 
         // ** 1.A **  apos atribuir todos os dados volto para o controler
     }
+
+
     //POSSO CRIAR NA ENTIDADE E CLASSE ENDERECO POSSO CRIAR CONSTRUTORES QUE TRABALHAM COM DTO.
+
+    //criando os dados para atualizar**b**
+    public void atualizarInformacoes(DadosAtualizacaoMedico dados) {
+        //implementando: Pegar o DTO que chega como parametro e usar os campos para atualizar os campos do OBJETO MEDICO.
+        /*this.nome = dados.nome();//Se o nome nao conter o nome no JSON, o spring responde isso como nulo. Nao e bem isso que quero fazer, quero att apenas se o nome nao tiver nulo*/
+        if(dados.nome() != null){ //Diferente de nulo
+            this.nome = dados.nome();
+        }
+        if(dados.telefone() != null){
+            this.telefone = dados.telefone();
+        }
+        if(dados.endereco() != null){
+            this.endereco.atualizarInformacoesEndereco(dados.endereco());/*posso criar um metodo na classe de endreco onde passo o Dados.endereco e la dentro ele att cada campo que necessita ser att.*/
+        }
+
+
+
+    }
 }
 //*****************************
 // CURIOSIDADE: Ate aqui eu to mapeando a entidade, mas como vou pegar esse objeto medico e salvar no banco de dados?

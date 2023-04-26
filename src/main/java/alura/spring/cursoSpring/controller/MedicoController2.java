@@ -1,10 +1,7 @@
 package alura.spring.cursoSpring.controller;
 
 import alura.spring.cursoSpring.endereco.Endereco;
-import alura.spring.cursoSpring.medico.DadosCadastroMedico;
-import alura.spring.cursoSpring.medico.DadosListagemMedico;
-import alura.spring.cursoSpring.medico.Medico;
-import alura.spring.cursoSpring.medico.MedicoRepository;
+import alura.spring.cursoSpring.medico.*;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -56,6 +53,18 @@ public class MedicoController2 {
         return repository.findAll(paginacao/*faco uma sobrecarga aqui no findall passando a paginacao*/).map(DadosListagemMedico::new)/*tiro o map, tolist e o strem, pois o map ja faz a conversao e ja retorna um page de dto automaticamente*/;/* 1.b .map(DadosListagemMedico::new) dara erro, assim eu preciso chamar um construtor do record DadosListagemMEdico, mas aqui dentro do DTO n existe um construtor que recebe um objeto do tipo medico */
         /*fazendo mapeamento para converter medicos para DadosListagemMEdicos*/
         /*com isso eu converto uma lista de medicos para uma lista de DadosListagemMEdico que e o nosso DTO*/
+    }
+
+    @PutMapping
+    @Transactional
+    public void atualizar(@RequestBody @Valid DadosAtualizacaoMedico dados){//@RequestBody @Valid DadosCadastroMedico dados so que n pdoemos usar esse DTO DadosCadsatroMEdico pois ele tem todos os campos obrigatorios e o enunciado diz que nao sao obrigatorios
+        //crio um DTO com base no DadosCadastroMedico
+        //Vou trocar o DadosCadastroMedico pelo novo DTO criado (DadosAtualizacaoMedico)
+
+        var medico = repository.getReferenceById(dados.id());//carreguei o medico pelo ID que chega pelo DTO.
+        medico.atualizarInformacoes(dados);//crio um metodo no meu OBJETO/CLASSE MEDICO e passo meu DTO dados. //criando os dados **b**
+        /*Carreguei o MEdico pelo ID, chamei os metodos para atualizar baseados no DTO.*/
+        /*Como falo para ele fazer um UPDATE no BD. Nao preciso fazer nada, pois o JPA se encarrega disso, pois nosso metodo esta anotado com uma @Transational dai nosso codigo vai ser, entao nosso trecho de codigo roda dentro de uma transacao, entao a JPA se vc carrega uma entidade do banco de dados e muda um atributo, quando a transacao for completa, a JPA detecta que teve uma mudanca e atualiza o atributo e faz update sozinho*/
     }
 }
 
