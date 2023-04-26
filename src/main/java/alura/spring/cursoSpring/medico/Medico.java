@@ -36,14 +36,19 @@ public class Medico {
     //para isso funcionar vou la em endereco e adiciono @Embeddable
     private Endereco endereco;
 
+    //Adicionando mais um dado no OBJETO MEDICO para fazer sentido na coluna criada no flyway V4, onde crio a coluna para exclusao logica
+    private Boolean ativo;
+
     // ** 1.A ** Passando um construtor que recebe todos os parametros para Passar no MedicoController2
     public Medico(DadosCadastroMedico dados){
+        this.ativo = true;//toda vez que eu instanciar um medico com esse construtor, ja vira com o status de ativo.
         this.nome = dados.nome();
         this.email = dados.email();
         this.telefone = dados.telefone();
         this.crm = dados.crm();
         this.especialidade = dados.especialidade();
         this.endereco = new Endereco(dados.endereco());//Aqui eu vou fazer a mesma coisa, vou instanciar um OBJETO endereco e passar la na CLASSE ENDERECO crio um construtor que recebe Dados.Endereco que e o nosso DTO.
+
 
         // ** 1.A **  apos atribuir todos os dados volto para o controler
     }
@@ -64,9 +69,10 @@ public class Medico {
         if(dados.endereco() != null){
             this.endereco.atualizarInformacoesEndereco(dados.endereco());/*posso criar um metodo na classe de endreco onde passo o Dados.endereco e la dentro ele att cada campo que necessita ser att.*/
         }
+    }
 
-
-
+    public void excluir() {
+        this.ativo = false;
     }
 }
 //*****************************

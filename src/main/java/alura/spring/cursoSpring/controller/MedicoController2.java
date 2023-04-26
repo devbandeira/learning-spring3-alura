@@ -50,9 +50,11 @@ public class MedicoController2 {
         //..da mesma forma que criamos um DTO para DadosCadastroMedico/Paciente, vamos criar um DTO para devolver dados da API, entao sera um <DadosListagemMEdico>
         /*return repository.findAll();*/
         //Apos criar o DTO, o repository.findall() dara erro, pois findAll retorna uma lista de medico, a antidade JPA, mas o nosso retorno e DadosListagemMedico, entao vou ter que converter. Converter de medico para DadosListagemMEdico*/
-        return repository.findAll(paginacao/*faco uma sobrecarga aqui no findall passando a paginacao*/).map(DadosListagemMedico::new)/*tiro o map, tolist e o strem, pois o map ja faz a conversao e ja retorna um page de dto automaticamente*/;/* 1.b .map(DadosListagemMedico::new) dara erro, assim eu preciso chamar um construtor do record DadosListagemMEdico, mas aqui dentro do DTO n existe um construtor que recebe um objeto do tipo medico */
+    //**123***    return repository.findAll(paginacao/*faco uma sobrecarga aqui no findall passando a paginacao*/).map(DadosListagemMedico::new)/*tiro o map, tolist e o strem, pois o map ja faz a conversao e ja retorna um page de dto automaticamente*/;/* 1.b .map(DadosListagemMedico::new) dara erro, assim eu preciso chamar um construtor do record DadosListagemMEdico, mas aqui dentro do DTO n existe um construtor que recebe um objeto do tipo medico */
         /*fazendo mapeamento para converter medicos para DadosListagemMEdicos*/
         /*com isso eu converto uma lista de medicos para uma lista de DadosListagemMEdico que e o nosso DTO*/
+    // **123***   //comentando o "return repository.findAll(paginacao).map(DadosListagemMedico::new)" e colocando novo metodo JPA
+        return repository.findAllByAtivoTrue(paginacao).map(DadosListagemMedico::new);
     }
 
     @PutMapping
@@ -73,7 +75,21 @@ public class MedicoController2 {
     //
     public void excluir(@PathVariable Long id){//Para capturar o ID que vai chegar da nossa URL, basta eu passar ele como parametro. Utilizando o @PathVariable, ou seja, uma variavel do PATH da URL (caminho da URL)
         //Entao preciso acessar o banco de dados e chamo o repository
-        repository.deleteById(id);//Ate aqui eu to fazendo uma esclusao fisica e nao uma exclusao logica(somente deixar em status OFF) conforme pede o enunciado
+        //repository.deleteById(id);//Ate aqui eu to fazendo uma esclusao fisica e nao uma exclusao logica(somente deixar em status OFF) conforme pede o enunciado
+
+
+        /*Agora que fiz a alteracao no BD V4 criando a coluna e adicionando no meu objeto MEDICO o atributo status, tenho que
+        * tirar o deleteById()id se nao ele vai apagar o registro e nao e o que queremos. Temos que carregar a ENTIDADE do banco de dados
+        * e mudar o status de ATIVO = TRUE para ATIVO = FALSE */
+        /*Vou trazer a entidade do meu DB INATIVA-LA seta de true pra false e disparar o UPDATE PARA O BD*/
+        var medico = repository.getReferenceById(id);
+        medico.excluir();/*utilizando o metodo excluir e criando ele na ENTIDADE MEDICO*/
+        /*chamei o metodo no meu BD, chamei o metodo EXCLUIR e troquei o STATUS. Como mexi em um atributo e tem a anotacao @TRANSATIONAL
+        * a JPA vai atualizar automaticamente.*/
+
+        /*Agora no meu controlerMEdicos2, vou ir no metodo LISTAR e mudar para carregar somente os com STATUS ATIVO
+        * ate o momento ele recarrega todos os REGISTROS (findall) e vamos trocar ele criando um novo metodo chamado:
+        * findAllByAtivoTrue()*/
 
     }
 }
@@ -102,3 +118,9 @@ public class MedicoController2 {
 
 //****resumo put****
 /*Nossa resuisicao de ATT, disparo uma requisicao do tipo PUT, passando o ID e os atributos que quero atualizar para identificar no BACKEND qual registro vai ser atualizado no banco de dados e no nosso controller/logica para att e bem simples. " carregamoso registro atual atraves do ID sobrescreve os atributos baseados nos novos campos que chegaram do DTO e pronto, nao preciso chamar nada do REPOSITORY o update vai ser feito atuomaticamente pela JPA"*/
+
+// ** * * V4__ALTER TABLE * * **
+//alter table medicos add ativo tinyint not null;
+//#Como ja tenho varios registros no BD eles ja estarao cadastrados como NULLO, entao nao posso usar NOT NULL
+//Para todos os registros no BD tenho que atualizar essa coluna para ATIVO, considerando que todos estao ativos. update medicos set ativo=1;
+//Na sequencia eu posso usar o NOT NULL caso eu quero somente para alterar a coluna apos ter feito os devidos ajustes.
